@@ -1,5 +1,8 @@
+import Layout from "./Layout"
 export default function App(){
   return (
-    <h1>Munner AHamed Shaik</h1>
-  )
+<div className="App">
+  <Layout></Layout>
+</div>
+    )
 }
