@@ -10,7 +10,7 @@ export default {
         'ext':"320px",
         'sm': '500px',
         'md': '800px',
-        'lg': '1024px',
+        'lg': '994px',
         'xl': '1280px',
         '2xl': '1536px',
       }

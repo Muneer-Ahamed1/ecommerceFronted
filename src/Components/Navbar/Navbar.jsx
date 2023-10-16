@@ -45,7 +45,7 @@ function Logo() {
         </Link>
     )
 }
-function Humberger({setState,state}) {
+export function Humberger({setState,state}) {
     return (
         <div className="humberger md:hidden" onClick={()=>setState(!state)} >
             <GiHamburgerMenu className="w-[25px] h-[25px]"></GiHamburgerMenu>
