@@ -17,6 +17,7 @@ import Contact from "./Components/Main/Contact.jsx"
 import About from "./Components/Main/About.jsx"
 import Cart from "./Components/Main/Cart.jsx"
 import Details from './Components/Main/Details.jsx'
+import Product from './Components/Main/Products.jsx'
 
 
 
@@ -26,6 +27,7 @@ const router = createBrowserRouter(
     >
       <Route path='' element={<Home/>}/>
       <Route path='about' element={<About />} />
+      <Route path='product' element={<Product/>}/>
       <Route path='product/:id' element={<Details />} />
       <Route path='contacts' element={<Contact />} />
       <Route path='cart' element={<Cart />} />

@@ -72,7 +72,7 @@ const product = createSlice({
 
         },
         [fetchDetails.rejected]: (state, action) => {
-            state.status = { loading: true, error: true, issue: action.error.message };
+            state.status = { loading: false, error: true, issue: action.error.message };
         }
     }
 }

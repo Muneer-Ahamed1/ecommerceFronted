@@ -3,7 +3,9 @@ import { Link, useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDetails } from "../../Feature/ProductRedux";
 import formatPrice from "./formatPrice";
+import {TiTickOutline} from "react-icons/ti"
 import { useState } from "react";
+import Star from "./Star";
 export default function Details() {
     const param = useParams();
     console.log(param)
@@ -33,10 +35,11 @@ else{
 
 
 export function ProductOverviewOne({ id, detail }) {
-    const { price, description, company,image,category,featured,colors,name,stock} = detail
-    console.log(colors)
+    const { price, description, company,image,category,featured,colors,name,stock,stars} = detail
+    const [clr,setColor]=useState()
     const [count,setCount]=useState(0);
     const feature=(featured)?("True"):("False");
+
 
 
     return (
@@ -103,7 +106,15 @@ export function ProductOverviewOne({ id, detail }) {
                                         key={color}
                                         className="text-heading mb-2 mr-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded border border-gray-100 p-1 text-xs font-semibold uppercase transition duration-200 ease-in-out hover:border-black md:mb-3 md:mr-3 md:h-11 md:w-11 md:text-sm"
                                     >
-                                        <span className={`block h-full w-full rounded `} style={{backgroundColor:`${color}`}} />
+                                        <span className={` h-full w-full rounded flex justify-center items-center`} style={{backgroundColor:`${color}`}} 
+                                        onClick={()=>{setColor(color)
+                                        setCount(1)
+                                        }}
+                                        >
+                                        {
+                                            (clr==color)?(<TiTickOutline className=" text-white h-[100%] w-[80%]"></TiTickOutline>):("")
+                                        }
+                                            </span>
                                     </li>
                                 ))}
                             </ul>
@@ -177,18 +188,13 @@ export function ProductOverviewOne({ id, detail }) {
                             </div>
                         </div>
                     </div>
-                    <div className="">
-                        <header className="flex cursor-pointer items-center justify-between border-t border-gray-300 py-5 transition-colors md:py-6">
-                            <h2 className="text-heading pr-2 text-sm font-semibold leading-relaxed md:text-base lg:text-lg">
-                                Additional Information
-                            </h2>
-                        </header>
-                    </div>
+                    
                     <div className="">
                         <header className="flex cursor-pointer items-center justify-between border-t border-gray-300 py-5 transition-colors md:py-6">
                             <h2 className="text-heading pr-2 text-sm font-semibold leading-relaxed md:text-base lg:text-lg">
                                 Customer Reviews
                             </h2>
+                            <Star stars={stars} className="w-[20%] grid col-span-5"></Star>
                         </header>
                     </div>
                 </div>

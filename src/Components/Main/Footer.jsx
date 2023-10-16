@@ -1,5 +1,5 @@
 import React from 'react'
-import { Humberger } from '../Navbar/Navbar'
+import { Logo } from '../Navbar/Navbar'
 export default function FooterFour() {
   return (
     <section className="relative overflow-hidden py-10">
@@ -8,7 +8,7 @@ export default function FooterFour() {
           <div className="w-full p-6 md:w-1/2 lg:w-5/12">
             <div className="flex h-full flex-col justify-between">
               <div className="mb-4 inline-flex items-center">
-               <Humberger/>
+
                 <span className="ml-4 text-lg font-bold">Eletro Store</span>
               </div>
               <div>

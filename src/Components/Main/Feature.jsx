@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import Product from "./Product";
+import Product from "./Card";
 export default function Feature() {
     const products = useSelector((val) => val.Products.productData);
     const productData = products.filter((vl) => {

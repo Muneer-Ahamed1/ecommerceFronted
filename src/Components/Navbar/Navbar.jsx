@@ -31,7 +31,7 @@ export default function Navbar() {
 
 }
 
-function Logo() {
+export function Logo() {
     return (
         <Link to={"/"}>
         <div className="Logo flex p-1 border-2 gap-1 rounded-md border-solid border-gray-800 cursor-pointer">
@@ -57,7 +57,7 @@ export function NavPanel({wrapper,NavStyle,clickme,btn}) {
         <div className={wrapper}>
             <NavLink to="/" className={NavStyle} onClick={clickme}>HOME</NavLink>
             <NavLink to="/about" className={NavStyle} onClick={clickme}>ABOUT</NavLink>
-            <NavLink to="/products" className={NavStyle} onClick={clickme}>PRODUCTS</NavLink>
+            <NavLink to="/product" className={NavStyle} onClick={clickme}>PRODUCTS</NavLink>
             <NavLink to="/contacts" className={NavStyle} onClick={clickme}> CONTACTS</NavLink>
             <NavLink to="/contacts" className={btn}> LOG IN</NavLink>
 
