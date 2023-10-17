@@ -6,6 +6,7 @@ export default function Feature() {
         return vl?.featured;
     })
     console.log(productData)
+    const style="product lg:w-[25%] sm:w-[40%] w-[80%]"
 
     return (
         <div className="feature bg-slate-50">
@@ -16,7 +17,7 @@ export default function Feature() {
                         productData && productData.map((item, index) => {
                             const { category, image, name, price, company, id } = item
                             return (
-                                <Product key={index} data={item} />
+                                <Product key={index} data={item} style={style}/>
                             )
                         })
                     }

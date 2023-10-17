@@ -1,9 +1,10 @@
 import formatPrice from "./formatPrice"
 import { Link } from "react-router-dom"
-export default function Product({data}) {
+export default function Product({data,style}) {
     const {category,image,name,price,company,id}=data
+    console.log(id)
     return (
-        <Link className="product lg:w-[25%] sm:w-[40%] w-[80%]" to={`product/${id}`}>
+        <Link className={style} to={`/product/${id}`}>
         <div >
             <div className="card">
                 <div className="img relative">

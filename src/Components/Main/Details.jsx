@@ -52,9 +52,9 @@ export function ProductOverviewOne({ id, detail }) {
                         </li>
                         <li className="text-body mt-0.5 text-base">/</li>
                         <li className="text-body hover:text-heading px-2.5 text-sm transition duration-200 ease-in first:pl-0 last:pr-0">
-                            <a className="capitalize" href="#">
+                            <Link className="capitalize" to={"/product"}>
                                 products
-                            </a>
+                            </Link>
                         </li>
                         <li className="text-body mt-0.5 text-base">/</li>
                         <li className="text-body hover:text-heading px-2.5 text-sm transition duration-200 ease-in first:pl-0 last:pr-0">

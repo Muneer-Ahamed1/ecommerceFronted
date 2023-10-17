@@ -7,7 +7,7 @@ export default function Star({stars}) {
     let j=2.5;
     let k=5;
     console.log(Math.floor(k-j))
-    let star=2.5;
+    let star=stars;
     for(let i=star;i>0;i--) {
         if(i>=1) {
             arr.push(<FaStar className="w-[100%] h-[100%]"></FaStar>)
