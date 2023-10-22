@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { BarChart, Wallet, Newspaper, BellRing, Paperclip, Brush, Wrench } from 'lucide-react'
 import { Home, Copy, Bookmark, Users, Settings } from 'lucide-react'
 import { useRef } from 'react'
@@ -6,13 +6,25 @@ import { useState } from 'react'
 import formatPrice from './formatPrice'
 import { useDispatch, useSelector } from 'react-redux'
 import ProductCard from "./Card"
-import { filterData } from '../../Feature/ProductRedux'
+import { filterData, filterCompany, sortPriceorder, setInputText } from '../../Feature/ProductRedux'
+import ListView from "./ListView";
+import GridView from './GridView'
 
 export default function Product() {
     const dispatch = useDispatch();
-    const data = useSelector((val) => val.Products.productData)
-    let [productData, setProductData] = useState(data);
-    let filterProduct = useSelector((val) => val.Products.filterData);
+    const [view, setView] = useState(true);
+
+    let temp = (val) => val.Products.filterData;
+    const [inputText,setInput]=useState("");
+
+    useEffect(() => {
+        console.log("mounted")
+        temp = (val) => val.Products.productData;
+
+    }, [])
+
+
+
 
 
 
@@ -20,64 +32,63 @@ export default function Product() {
 
 
     function filter(vl) {
-        if (vl === "All") {
-            console.log(data)
-            setProductData((data))
-        }
-        else {
-            dispatch(filterData(vl));
-            setProductData(filterProduct);
-        }
+        dispatch(filterData(vl));
+
     }
+    function filterComp(vl) {
+        dispatch(filterCompany(vl));
+
+    }
+    function sortOrder(vl) {
+        console.log(vl)
+        dispatch(sortPriceorder(vl))
+    }
+    function setInputTextValue(vl) {
+        dispatch(setInputText(vl));
+
+        setInput(vl)
+    }
+   
+    let filterProduct = useSelector(temp);
+    console.log(filterProduct)
+
 
     return (
         <div className="Wrapper flex p-3 border-2 border-slate-100">
-            <Filter filterData={filter} />
-            <ProductList productData={productData} />
+            <Filter filterData={filter} filterComp={filterComp} sortOrder={sortOrder} setInputText={setInputTextValue} />
 
+            <ProductList productData={filterProduct} sortOrder={sortOrder} setView={setView} view={view} />
 
         </div>
     )
 }
 
 
-export function ProductList({ productData }) {
+export function ProductList({ productData, sortOrder, setView, view }) {
     const style = "product  w-[100%] h-[100%]"
-
-
+    if (productData.length == 0) {
+        return <h1>Empty ARR</h1>
+    }
+let width;
+if(view) {
+width="Products mx-auto flex flex-col md:max-w-[70%] p-3";
+}
+else{
+    width="Products mx-auto flex flex-col md:max-w-[70%] p-3";
+}
 
     return (
-        <div className="Products mx-auto flex flex-col max-w-[70%]">
-            <div className="product-nav grid grid-cols-3 my-2">
-                <div className="first">
+        <div className={width} >
+            <SecondFilter setView={setView} sortOrder={sortOrder}
+                productData={productData} view={view}
+            ></SecondFilter>
+            {
+                (view) ? (
+                    <GridView productData={productData} style={style}></GridView>
+                ) :
+                    (<ListView products={productData}></ListView>)
 
-
-                </div>
-                <div className="second">
-
-                </div>
-                <div className="third justify-self-end">
-                    <select name="Filter" className="Filter p-2 border-2 border-slate-100" onClick={(e) => { console.log(e.target) }}>
-                        <option value="" selected>Filter</option>
-                        <option value="highest" >Price(highest)</option>
-                        <option value="lowest" >Price(lowest)</option>
-                    </select>
-
-
-
-                </div>
-            </div>
-            <div className="products-list grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid">
-                {
-                    productData && productData?.map((vl) => {
-                        return (<ProductCard key={vl.id} data={vl} style={style} />)
-                    })
-                }
-
-
-            </div>
-
-
+            }
 
 
         </div>
@@ -85,19 +96,12 @@ export function ProductList({ productData }) {
 }
 
 
-
-
-
-
-
-
-
-export function Filter({ filterData }) {
+export function Filter({ filterData, filterComp,setInputText }) {
     const range = useRef(0);
     const [rangeValue, setRange] = useState(0);
     return (
         <aside className="flex min-h-[100%] w-64 flex-col overflow-y-auto border-r bg-white px-5 py-8">
-            <input type="text" placeholder='search' className='p-2 border-2 border-slate-100' />
+            <input type="text" placeholder='search' className='p-2 border-2 border-slate-100' onChange={(e)=>setInputText(e.target.value)} />
             <div className="mt-6 flex flex-1 flex-col justify-between">
                 <nav className="-mx-3 space-y-6 ">
                     <div className="space-y-3 ">
@@ -105,7 +109,7 @@ export function Filter({ filterData }) {
                         <a
                             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                             onClick={(e) => {
-                                e.preventDefault;
+                                e.stopPropagation();
                                 filterData("All");
                             }}
 
@@ -115,6 +119,7 @@ export function Filter({ filterData }) {
                         <a
                             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                             onClick={(e) => {
+                                e.stopPropagation();
                                 filterData("Mobile")
                             }}
                         >
@@ -123,7 +128,7 @@ export function Filter({ filterData }) {
                         <a
                             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                             onClick={(e) => {
-                                e.preventDefault;
+                                e.stopPropagation();
                                 filterData("Laptop")
                             }
                             }
@@ -133,19 +138,28 @@ export function Filter({ filterData }) {
                         </a>
                         <a
                             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                            onClick={(e) => filterData("Computer")}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                filterData("Computer")
+                            }}
                         >
                             <span className="mx-2 text-sm font-medium">Computer</span>
                         </a>
                         <a
                             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                            onClick={(e) => filterData("Accessories")}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                filterData("Accessories")
+                            }}
                         >
                             <span className="mx-2 text-sm font-medium">Accessories</span>
                         </a>
                         <a
                             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                            onClick={(e) => filterData("Watch")}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                filterData("Watch")
+                            }}
 
                         >
                             <span className="mx-2 text-sm font-medium">Watch</span>
@@ -156,9 +170,26 @@ export function Filter({ filterData }) {
                         <a
                             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                         >
-                            <select name="company" className="company w-[100%] p-2 border-2 border-slate-100">
+                            <select name="company" className="company w-[100%] p-2 border-2 border-slate-100" onChange={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation();
+                                console.log(e.target.value)
+                                filterComp(e.target.value)
+                            }}>
                                 <option value="" selected disabled>company</option>
-                                <option value="apple">apple</option>
+                                <option value="Apple">Apple</option>
+                                <option value="Samsung">Samsung</option>
+                                <option value="Dell">Dell</option>
+                                <option value="Nokia">Nokia</option>
+                                <option value="Asus">Asus</option>
+                                <option value="Lenova">lenova</option>
+                                <option value="Rolex">Rolex</option>
+
+
+
+
+
+
                             </select>
                         </a>
 
@@ -189,7 +220,7 @@ export function Filter({ filterData }) {
                             href="#"
                         >
                             {console.log(range.current.value)}
-                            <label for="vol">{
+                            <label>{
                                 formatPrice(rangeValue)
                             }</label>
                             <input type="range" id="vol" name="vol" min="0" max="500000" className='w-full ml-2' ref={range} onClick={(e) => e.stopPropagation()}
@@ -215,5 +246,34 @@ export function Filter({ filterData }) {
                 </nav>
             </div>
         </aside>
+    )
+}
+
+
+export function SecondFilter({ setView, sortOrder, productData,view }) {
+
+    return (
+        <div className="product-nav grid grid-cols-3 my-2 items-center ">
+
+            <div className="first flex justify-evenly">
+                <button onClick={() => setView(!view)}>{(view)?("Grid View"):("Line View")}</button>
+            </div>
+
+            <div className="second text-center">
+                <h1>Current Products {productData.length} </h1>
+            </div>
+
+            <div className="third justify-self-end">
+                <select name="Filter" className="Filter p-2 border-2 border-slate-100" onChange={(e) => {
+                    e.stopPropagation()
+                    console.log("asdsa")
+                    sortOrder(e.target.value)
+                }}>
+                    <option value="" selected disabled>Filter</option>
+                    <option value="highest" >Price(highest)</option>
+                    <option value="lowest" >Price(lowest)</option>
+                </select>
+            </div>
+        </div>
     )
 }

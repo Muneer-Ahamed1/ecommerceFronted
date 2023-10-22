@@ -2,10 +2,9 @@ import formatPrice from "./formatPrice"
 import { Link } from "react-router-dom"
 export default function Product({data,style}) {
     const {category,image,name,price,company,id}=data
-    console.log(id)
     return (
-        <Link className={style} to={`/product/${id}`}>
-        <div >
+        <Link className={style} to={`/product/${id}`} >
+        <div className="border-2 border-slate-100 p-2 rounded-md">
             <div className="card">
                 <div className="img relative">
                     <img src={image} alt="NOT FOUND" />

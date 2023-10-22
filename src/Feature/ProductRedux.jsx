@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice,current} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const fetchProduct = createAsyncThunk("Product/fetchProduct", async () => {
@@ -36,24 +36,102 @@ const product = createSlice({
         },
         productData: [],
         filterData:[],
+        companyData:[],
+        tempData: [],
         detailData: [],
     },
     reducers: {
-        filterData:(state,{payload})=>{
-            console.log(current(state.productData))
-            console.log(payload.toLowerCase())
-            state.filterData=state.productData.filter((data)=>{
-                console.log(data.category)
-                if(data.category===payload.toLowerCase()){
-                    current(data)
-                    return data
-                }
+        filterData: (state, { payload }) => {
+            console.log(current(state.filterData))
 
-            })
-            console.log(state.filterData)
-            
+            if (payload == "All") {
+                if(state.companyData.length!=0) {
+                    const company=state.companyData[0].company.toLowerCase();
+                    console.log(company)
+                    state.tempData = state.productData.filter(p=> p.company.toLowerCase()==company);
+                }
+                else{
+                state.tempData = state.productData;
+            }
+        }
+            else if(state.companyData.length!=0) {
+                state.tempData=state.companyData.filter((data)=>{
+                    if(data.category === payload.toLowerCase()) {
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+                })
+            }
+            else {
+                
+                state.tempData = state.productData.filter((data) => {
+                    if (data.category === payload.toLowerCase()) {
+                        return true
+                    }
+                    else {
+                        return false
+                    }
+
+                })
+            }
+            state.filterData=state.tempData;
+
 
         },
+        filterCompany: (state, { payload }) => {
+
+            state.companyData = state.tempData.filter((data) => {
+                if (data.company.toLowerCase() === payload.toLowerCase()) {
+                    console.log(data.company.toLowerCase())
+
+                    return true;
+                }
+            })
+            state.filterData=state.companyData;
+        },
+        sortPriceorder: (state, { payload }) => {
+            if (payload.toLowerCase() == "lowest") {
+                state.filterData = state.filterData.sort((a, b) => {
+                    return a['price'] - b['price'];
+                })
+            }
+            else {
+                state.filterData = state.filterData.sort((a, b) => {
+                    return b['price'] - a['price'];
+                })
+
+            }
+            state.tempData=state.filterData;
+
+
+        },
+        priceData:(state,{payload})=>{
+            state.filterData=state.tempData
+        
+    },
+    setInputText:(state,{payload})=>{
+        console.log(payload.length)
+        if(payload.length==0) {
+            state.filterData=state.tempData;
+
+        }
+        else{
+            state.filterData=state.filterData.filter((vl)=>{
+                if(vl.name.toLowerCase().includes(payload)) {
+                    return vl;
+                }
+            })
+        }
+        
+
+
+
+    }
+
+
+
     },
     extraReducers: {
         [fetchProduct.pending]: (state, action) => {
@@ -66,6 +144,9 @@ const product = createSlice({
         [fetchProduct.fulfilled]: (state, { payload }) => {
             state.status.loading = false
             state.productData = payload;
+            state.tempData = payload;
+            state.filterData=payload;
+
             console.log(payload)
 
         },
@@ -95,5 +176,5 @@ const product = createSlice({
 )
 
 export default product.reducer;
-export const {filterData}=product.actions;
+export const { filterData, filterCompany, sortPriceorder,setInputText } = product.actions;
 export { product };
