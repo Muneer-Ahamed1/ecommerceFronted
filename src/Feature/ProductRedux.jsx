@@ -35,8 +35,8 @@ const product = createSlice({
             issue: ""
         },
         productData: [],
-        filterData:[],
-        companyData:[],
+        filterData: [],
+        companyData: [],
         tempData: [],
         detailData: [],
     },
@@ -45,27 +45,27 @@ const product = createSlice({
             console.log(current(state.filterData))
 
             if (payload == "All") {
-                if(state.companyData.length!=0) {
-                    const company=state.companyData[0].company.toLowerCase();
+                if (state.companyData.length != 0) {
+                    const company = state.companyData[0].company.toLowerCase();
                     console.log(company)
-                    state.tempData = state.productData.filter(p=> p.company.toLowerCase()==company);
+                    state.tempData = state.productData.filter(p => p.company.toLowerCase() == company);
                 }
-                else{
-                state.tempData = state.productData;
+                else {
+                    state.tempData = state.productData;
+                }
             }
-        }
-            else if(state.companyData.length!=0) {
-                state.tempData=state.companyData.filter((data)=>{
-                    if(data.category === payload.toLowerCase()) {
+            else if (state.companyData.length != 0) {
+                state.tempData = state.companyData.filter((data) => {
+                    if (data.category === payload.toLowerCase()) {
                         return true;
                     }
-                    else{
+                    else {
                         return false;
                     }
                 })
             }
             else {
-                
+
                 state.tempData = state.productData.filter((data) => {
                     if (data.category === payload.toLowerCase()) {
                         return true
@@ -76,7 +76,7 @@ const product = createSlice({
 
                 })
             }
-            state.filterData=state.tempData;
+            state.filterData = state.tempData;
 
 
         },
@@ -89,7 +89,7 @@ const product = createSlice({
                     return true;
                 }
             })
-            state.filterData=state.companyData;
+            state.filterData = state.companyData;
         },
         sortPriceorder: (state, { payload }) => {
             if (payload.toLowerCase() == "lowest") {
@@ -103,32 +103,45 @@ const product = createSlice({
                 })
 
             }
-            state.tempData=state.filterData;
+            state.tempData = state.filterData;
 
 
         },
-        priceData:(state,{payload})=>{
-            state.filterData=state.tempData
-        
-    },
-    setInputText:(state,{payload})=>{
-        console.log(payload.length)
-        if(payload.length==0) {
-            state.filterData=state.tempData;
+        priceData: (state, { payload }) => {
+            state.filterData = state.tempData
 
-        }
-        else{
-            state.filterData=state.filterData.filter((vl)=>{
-                if(vl.name.toLowerCase().includes(payload)) {
-                    return vl;
+        },
+        setInputText: (state, { payload }) => {
+            console.log(payload.length)
+            if (payload.length == 0) {
+                state.filterData = state.tempData;
+
+            }
+            else {
+                state.filterData = state.filterData.filter((vl) => {
+                    if (vl.name.toLowerCase().includes(payload)) {
+                        return vl;
+                    }
+                })
+            }
+
+        },
+       setColorSelection:(state,{payload})=>{
+        let colors=[];
+        colors.length = 0;
+        console.log(current(state.tempData))
+        state.tempData.map((vl)=>{
+            vl.colors.map((clr)=>{
+                if(clr==payload) {
+                    colors.push(vl);
                 }
             })
-        }
-        
+        })
+        state.filterData=colors;
 
 
 
-    }
+       } 
 
 
 
@@ -145,7 +158,7 @@ const product = createSlice({
             state.status.loading = false
             state.productData = payload;
             state.tempData = payload;
-            state.filterData=payload;
+            state.filterData = payload;
 
             console.log(payload)
 
@@ -176,5 +189,5 @@ const product = createSlice({
 )
 
 export default product.reducer;
-export const { filterData, filterCompany, sortPriceorder,setInputText } = product.actions;
+export const { filterData, filterCompany, sortPriceorder, setInputText,setColorSelection } = product.actions;
 export { product };
