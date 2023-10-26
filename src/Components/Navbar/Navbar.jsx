@@ -3,6 +3,8 @@ import { Link, NavLink } from "react-router-dom"
 import {GiHamburgerMenu} from "react-icons/gi"
 import { useState } from "react"
 import Navmb from "./Navmb"
+import { useSelector } from "react-redux"
+import "../../index.css"
 
 export default function Navbar() {
     const[state,setState]=useState(true);
@@ -53,6 +55,8 @@ export function Humberger({setState,state}) {
     )
 }
 export function NavPanel({wrapper,NavStyle,clickme,btn}) {
+    const length=useSelector((val)=>val.Cart.addToCart).length;
+    console.log(length)
     return (
         <div className={wrapper}>
             <NavLink to="/" className={NavStyle} onClick={clickme}>HOME</NavLink>
@@ -63,7 +67,7 @@ export function NavPanel({wrapper,NavStyle,clickme,btn}) {
 
             <NavLink to={"/cart"} className="relative ml-3 flex p-3" onClick={clickme}>
                 <AiOutlineShoppingCart className=" w-[30px] h-[30px]"></AiOutlineShoppingCart>
-                <h1 className=" absolute right-1 top-1 rounded-full flex items-start font-semibold w-[23px] h-[23px] justify-center bg-green-700 text-white">0</h1>
+                <h1 className=" absolute right-1 top-1 rounded-full flex items-start font-semibold w-[23px] h-[23px] justify-center bg-green-700 text-white">{length}</h1>
             </NavLink>
         </div>
     )

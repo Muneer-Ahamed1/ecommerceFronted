@@ -36,6 +36,7 @@ const product = createSlice({
         },
         productData: [],
         filterData: [],
+        colorFilter:[],
         companyData: [],
         tempData: [],
         detailData: [],
@@ -76,11 +77,17 @@ const product = createSlice({
 
                 })
             }
+            state.colorFilter=state.tempData;
             state.filterData = state.tempData;
 
 
         },
         filterCompany: (state, { payload }) => {
+            if(payload==="All") {
+                state.companyData=state.productData;
+
+            }
+            else{
 
             state.companyData = state.tempData.filter((data) => {
                 if (data.company.toLowerCase() === payload.toLowerCase()) {
@@ -89,6 +96,8 @@ const product = createSlice({
                     return true;
                 }
             })
+        }
+            state.colorFilter=state.companyData;
             state.filterData = state.companyData;
         },
         sortPriceorder: (state, { payload }) => {
@@ -103,12 +112,14 @@ const product = createSlice({
                 })
 
             }
+            state.colorFilter=state.filterData;
             state.tempData = state.filterData;
 
 
         },
         priceData: (state, { payload }) => {
             state.filterData = state.tempData
+            state.colorFilter=state.tempData;
 
         },
         setInputText: (state, { payload }) => {
@@ -130,7 +141,7 @@ const product = createSlice({
         let colors=[];
         colors.length = 0;
         console.log(current(state.tempData))
-        state.tempData.map((vl)=>{
+        state.colorFilter.map((vl)=>{
             vl.colors.map((clr)=>{
                 if(clr==payload) {
                     colors.push(vl);
@@ -157,6 +168,7 @@ const product = createSlice({
         [fetchProduct.fulfilled]: (state, { payload }) => {
             state.status.loading = false
             state.productData = payload;
+            state.colorFilter=payload;
             state.tempData = payload;
             state.filterData = payload;
 

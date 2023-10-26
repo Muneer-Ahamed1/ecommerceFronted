@@ -3,11 +3,17 @@ import { Link, useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDetails } from "../../Feature/ProductRedux";
 import formatPrice from "./formatPrice";
-import {TiTickOutline} from "react-icons/ti"
+import { TiTickOutline } from "react-icons/ti"
 import { useState } from "react";
 import Star from "./Star";
+import { addToCart } from "../../Feature/CartRedux";
+import { customCart } from "../../Context/CartContext";
 export default function Details() {
     const param = useParams();
+    const {setCount,count}=customCart();
+
+
+
     console.log(param)
     const dispatch = useDispatch();
     const detail = useSelector((val) => val.Products.detailData);
@@ -17,30 +23,43 @@ export default function Details() {
         dispatch(fetchDetails(param.id))
 
     }, [])
-   
+
     if (loading) {
         return <h1>Loading</h1>
     }
-else{
-    console.log(param.id)
-    console.log(detail)
-    return (
-     
-        <ProductOverviewOne id={param.id} detail={detail}></ProductOverviewOne>
-    )
-}
+    else {
+        console.log(param.id)
+        console.log(detail)
+        return (
+
+            <ProductOverviewOne id={param.id} detail={detail}></ProductOverviewOne>
+        )
+    }
 }
 
 
 
 
 export function ProductOverviewOne({ id, detail }) {
-    const { price, description, company,image,category,featured,colors,name,stock,stars} = detail
-    const [clr,setColor]=useState()
+    const { price, description, company, image, category, featured, colors, name, stock, stars } = detail
+    const [clr, setColor] = useState()
     const [count,setCount]=useState(0);
-    const feature=(featured)?("True"):("False");
+    const feature = (featured) ? ("True") : ("False");
+    const dispatch=useDispatch();
+    const [clrValidation,setClrValidation]=useState({display:"none"});
 
+    function addToCartHandler(count,color) {
+        if(!color) {
+            setClrValidation({display:"block"});
+        }
+        else{
+            const img=image[0];
+            dispatch(addToCart({color,name,count,price,img,setCount,company}))
+            
+        }
 
+    }
+  
 
     return (
         <div className="mx-auto max-w-7xl px-4 md:px-8 2xl:px-16">
@@ -95,36 +114,42 @@ export function ProductOverviewOne({ id, detail }) {
                         </div>
                     </div>
                     <div className="border-b border-gray-300 pb-3  ">
-                       
+
                         <div className="mb-4 ">
                             <h3 className="text-heading mb-2.5 text-base font-semibold capitalize md:text-lg">
                                 color
                             </h3>
                             <ul className="colors -mr-3 flex flex-wrap">
                                 {colors && colors?.map((color) => (
+                                    <>
                                     <li
                                         key={color}
                                         className="text-heading mb-2 mr-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded border border-gray-100 p-1 text-xs font-semibold uppercase transition duration-200 ease-in-out hover:border-black md:mb-3 md:mr-3 md:h-11 md:w-11 md:text-sm"
                                     >
-                                        <span className={` h-full w-full rounded flex justify-center items-center`} style={{backgroundColor:`${color}`}} 
-                                        onClick={()=>{setColor(color)
-                                        setCount(1)
-                                        }}
+                                        <span className={` h-full w-full rounded flex justify-center items-center`} style={{ backgroundColor: `${color}` }}
+                                            onClick={() => {
+                                                setColor(color)
+                                                setCount(1)
+                                                setClrValidation({display:"none"})
+                                            }}
                                         >
-                                        {
-                                            (clr==color)?(<TiTickOutline className=" text-white h-[100%] w-[80%]"></TiTickOutline>):("")
-                                        }
-                                            </span>
+                                            {
+                                                (clr == color) ? (<TiTickOutline className=" text-white h-[100%] w-[80%]"></TiTickOutline>) : ("")
+                                            }
+                                        </span>
                                     </li>
+                                    </>
                                 ))}
                             </ul>
                         </div>
+                        <p className=" text-red-600 px-2 pb-3" style={clrValidation}>*Please Select a color</p>
+
                     </div>
                     <div className="space-s-4 3xl:pr-48 flex items-center gap-2 border-b border-gray-300 py-8  md:pr-32 lg:pr-12 2xl:pr-32">
                         <div className="group flex h-11 flex-shrink-0 items-center justify-between overflow-hidden rounded-md border border-gray-300 md:h-12">
                             <button
                                 className="text-heading hover:bg-heading flex h-full w-10 flex-shrink-0 items-center justify-center border-e border-gray-300 transition duration-300 ease-in-out focus:outline-none md:w-12"
-                                onClick={()=>(stock>count)?setCount(count+1):(setCount(stock))}
+                                onClick={() => (stock > count) ? setCount(count + 1) : (setCount(stock))}
                             >
                                 +
                             </button>
@@ -132,7 +157,7 @@ export function ProductOverviewOne({ id, detail }) {
                                 {count}
                             </span>
                             <button className="text-heading hover:bg-heading flex h-full w-10 flex-shrink-0 items-center justify-center border-s border-gray-300 transition duration-300 ease-in-out focus:outline-none md:w-12"
-                            onClick={()=>(count==0)?0:setCount(count-1)}
+                                onClick={() => (count == 0) ? 0 : setCount(count - 1)}
                             >
                                 -
                             </button>
@@ -140,6 +165,8 @@ export function ProductOverviewOne({ id, detail }) {
                         <button
                             type="button"
                             className="h-11 w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                            onClick={
+                                (count>0)?(() => addToCartHandler(count,clr)):("")}
                         >
                             Add to cart
                         </button>
@@ -149,9 +176,9 @@ export function ProductOverviewOne({ id, detail }) {
                             <li>
                                 <span className="text-heading inline-block pr-2 font-semibold">Stock:</span>
                                 {console.log(feature)}
-                               {
-                                stock && stock+" "+"Items"
-                               }
+                                {
+                                    stock && stock + " " + "Items"
+                                }
                             </li>
                             <li>
                                 <span className="text-heading inline-block pr-2 font-semibold">Category:</span>
@@ -188,7 +215,7 @@ export function ProductOverviewOne({ id, detail }) {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="">
                         <header className="flex cursor-pointer items-center justify-between border-t border-gray-300 py-5 transition-colors md:py-6">
                             <h2 className="text-heading pr-2 text-sm font-semibold leading-relaxed md:text-base lg:text-lg">

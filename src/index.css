@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.active{
+    color:rgb(85, 85, 230);
+}
+.categoryActive{
+    color: rgb(145, 23, 145);
+    
+}

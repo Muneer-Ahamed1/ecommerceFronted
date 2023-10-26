@@ -18,6 +18,7 @@ import About from "./Components/Main/About.jsx"
 import Cart from "./Components/Main/Cart.jsx"
 import Details from './Components/Main/Details.jsx'
 import Product from './Components/Main/Products.jsx'
+import CartContext from './Context/CartContext.jsx'
 
 
 
@@ -38,6 +39,8 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={Store}>
+    <CartContext>
     <RouterProvider router={router}></RouterProvider>
+    </CartContext>
   </Provider>
 )
