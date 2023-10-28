@@ -8,9 +8,10 @@ import { useState } from "react";
 import Star from "./Star";
 import { addToCart } from "../../Feature/CartRedux";
 import { customCart } from "../../Context/CartContext";
+import Loading from "./Loading";
 export default function Details() {
     const param = useParams();
-    const {setCount,count}=customCart();
+    const { setCount, count } = customCart();
 
 
 
@@ -25,7 +26,7 @@ export default function Details() {
     }, [])
 
     if (loading) {
-        return <h1>Loading</h1>
+        return <Loading></Loading>
     }
     else {
         console.log(param.id)
@@ -43,23 +44,23 @@ export default function Details() {
 export function ProductOverviewOne({ id, detail }) {
     const { price, description, company, image, category, featured, colors, name, stock, stars } = detail
     const [clr, setColor] = useState()
-    const [count,setCount]=useState(0);
+    const [count, setCount] = useState(0);
     const feature = (featured) ? ("True") : ("False");
-    const dispatch=useDispatch();
-    const [clrValidation,setClrValidation]=useState({display:"none"});
+    const dispatch = useDispatch();
+    const [clrValidation, setClrValidation] = useState({ display: "none" });
 
-    function addToCartHandler(count,color) {
-        if(!color) {
-            setClrValidation({display:"block"});
+    function addToCartHandler(count, color) {
+        if (!color) {
+            setClrValidation({ display: "block" });
         }
-        else{
-            const img=image[0];
-            dispatch(addToCart({color,name,count,price,img,setCount,company}))
-            
+        else {
+            const img = image[0];
+            dispatch(addToCart({ color, name, count, price, img, setCount, company }))
+
         }
 
     }
-  
+
 
     return (
         <div className="mx-auto max-w-7xl px-4 md:px-8 2xl:px-16">
@@ -122,22 +123,22 @@ export function ProductOverviewOne({ id, detail }) {
                             <ul className="colors -mr-3 flex flex-wrap">
                                 {colors && colors?.map((color) => (
                                     <>
-                                    <li
-                                        key={color}
-                                        className="text-heading mb-2 mr-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded border border-gray-100 p-1 text-xs font-semibold uppercase transition duration-200 ease-in-out hover:border-black md:mb-3 md:mr-3 md:h-11 md:w-11 md:text-sm"
-                                    >
-                                        <span className={` h-full w-full rounded flex justify-center items-center`} style={{ backgroundColor: `${color}` }}
-                                            onClick={() => {
-                                                setColor(color)
-                                                setCount(1)
-                                                setClrValidation({display:"none"})
-                                            }}
+                                        <li
+                                            key={color}
+                                            className="text-heading mb-2 mr-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded border border-gray-100 p-1 text-xs font-semibold uppercase transition duration-200 ease-in-out hover:border-black md:mb-3 md:mr-3 md:h-11 md:w-11 md:text-sm"
                                         >
-                                            {
-                                                (clr == color) ? (<TiTickOutline className=" text-white h-[100%] w-[80%]"></TiTickOutline>) : ("")
-                                            }
-                                        </span>
-                                    </li>
+                                            <span className={` h-full w-full rounded flex justify-center items-center`} style={{ backgroundColor: `${color}` }}
+                                                onClick={() => {
+                                                    setColor(color)
+                                                    setCount(1)
+                                                    setClrValidation({ display: "none" })
+                                                }}
+                                            >
+                                                {
+                                                    (clr == color) ? (<TiTickOutline className=" text-white h-[100%] w-[80%]"></TiTickOutline>) : ("")
+                                                }
+                                            </span>
+                                        </li>
                                     </>
                                 ))}
                             </ul>
@@ -166,7 +167,12 @@ export function ProductOverviewOne({ id, detail }) {
                             type="button"
                             className="h-11 w-full rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                             onClick={
-                                (count>0)?(() => addToCartHandler(count,clr)):("")}
+                                (count > 0) ? (() => {
+                                    addToCartHandler(count, clr);
+                                    setCount(0);
+                                    setColor("");
+
+                                }) : ("")}
                         >
                             Add to cart
                         </button>

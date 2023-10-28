@@ -10,6 +10,8 @@ import ProductCard from "./Card"
 import { filterData, filterCompany, sortPriceorder, setInputText, setColorSelection } from '../../Feature/ProductRedux'
 import ListView from "./ListView";
 import GridView from './GridView'
+import { FiFilter } from "react-icons/fi"
+import Loading from './Loading'
 import "../../index.css"
 
 export default function Product() {
@@ -78,7 +80,11 @@ export default function Product() {
 
     return (
         <div className="Wrapper  p-3 border-2 border-slate-100 flex flex-col md:flex-row">
-            <button onClick={() => { setFilter(!filterState) }} className='px-3 py-2 ml-6 bg-black text-white rounded-md w-20 block md:hidden '>Filter</button>
+            <button onClick={() => { setFilter(!filterState) }} className='px-3 py-2 ml-6 bg-black text-white rounded-md w-20 flex md:hidden   items-center  gap-3'>
+                <div className="inner-wrap"><FiFilter style={{ height: "40px" }}></FiFilter>
+                </div>
+                <h1>Filter</h1>
+                </button>
             {(filterState) ?
                 (<Filter filterData={filter} filterComp={filterComp} sortOrder={sortOrder} setInputText={setInputTextValue} clr={clr} colors={colors} setColor={setColor}
                     setColorParams={setColorParams}
@@ -96,7 +102,7 @@ export default function Product() {
 export function ProductList({ productData, sortOrder, setView, view }) {
     const style = "product  w-[100%] h-[100%]"
     if (productData.length == 0) {
-        return <h1>Empty ARR</h1>
+        return <Loading></Loading>
     }
     let width;
     if (view) {
@@ -160,39 +166,39 @@ export function Filter({ filterData, filterComp, setInputText, colors, clr, setC
                         <label className="px-3 text-xs font-semibold uppercase text-gray-900  col-start-1 col-end-3 md:col-end-2 p-2">Category</label>
                         <a
                             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                            
+
 
                         >
                             <span className="mx-2 text-sm font-medium">All</span>
                         </a>
                         <a
                             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                            
+
                         >
                             <span className="mx-2 text-sm font-medium">Mobile</span>
                         </a>
                         <a
                             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                           
+
 
                         >
                             <span className="mx-2 text-sm font-medium">Laptop</span>
                         </a>
                         <a
                             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                           
+
                         >
                             <span className="mx-2 text-sm font-medium">Computer</span>
                         </a>
                         <a
                             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                           
+
                         >
                             <span className="mx-2 text-sm font-medium">Accessories</span>
                         </a>
                         <a
                             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                           
+
 
                         >
                             <span className="mx-2 text-sm font-medium">Watch</span>
@@ -298,17 +304,15 @@ export function Filter({ filterData, filterComp, setInputText, colors, clr, setC
 export function SecondFilter({ setView, sortOrder, productData, view }) {
 
     return (
-        <div className="product-nav grid grid-cols-3 my-2 items-center ">
+        <div className="product-nav grid sm:grid-cols-2 my-2 items-center gap-3 ">
 
-            <div className="first flex justify-evenly">
-                <button onClick={() => setView(!view)}>{(view) ? ("Grid View") : ("Line View")}</button>
-            </div>
+          
 
             <div className="second text-center">
                 <h1>Current Products {productData.length} </h1>
             </div>
 
-            <div className="third justify-self-end">
+            <div className="third justify-self-end order-first sm:order-last" >
                 <select name="Filter" className="Filter p-2 border-2 border-slate-100" onChange={(e) => {
                     e.stopPropagation()
                     console.log("asdsa")

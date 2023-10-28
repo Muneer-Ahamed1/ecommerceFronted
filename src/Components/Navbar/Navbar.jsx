@@ -63,7 +63,7 @@ export function NavPanel({wrapper,NavStyle,clickme,btn}) {
             <NavLink to="/about" className={NavStyle} onClick={clickme}>ABOUT</NavLink>
             <NavLink to="/product" className={NavStyle} onClick={clickme}>PRODUCTS</NavLink>
             <NavLink to="/contacts" className={NavStyle} onClick={clickme}> CONTACTS</NavLink>
-            <NavLink to="/contacts" className={btn}> LOG IN</NavLink>
+            <Link  className={btn}> LOG IN</Link>
 
             <NavLink to={"/cart"} className="relative ml-3 flex p-3" onClick={clickme}>
                 <AiOutlineShoppingCart className=" w-[30px] h-[30px]"></AiOutlineShoppingCart>
